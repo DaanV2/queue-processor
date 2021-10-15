@@ -2,9 +2,20 @@
   "name": "queue-processor",
   "version": "1.0.0",
   "description": "A promise like processor that tries to keep the event-loop as clean as possible",
-  "main": "index.js",
+  "main": "./lib/src/main.js",
+  "types": "./lib/src/main.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile": "tsc -b",
+    "build": "npm run clean && npm run compile",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "test": "mocha --debug-brk",
+    "clean": "rimraf lib",
+    "pretest": "npm run compile",
+    "prepublishOnly": "npm test",
+    "preversion": "",
+    "postversion": "git push && git push --tags",
+    "version": "git add -A src",
+    "watch": "tsc -w -p ./src"
   },
   "keywords": [
     "promise",
@@ -13,6 +24,14 @@
   ],
   "author": "DaanV2",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DaanV2/queue-processor/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DaanV2/queue-processor"
+  },  
+  "homepage": "https://github.com/DaanV2/queue-processor#readme",
   "devDependencies": {
     "@types/chai": "^4.2.22",
     "@types/mocha": "^9.0.0",
