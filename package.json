@@ -1,0 +1,16 @@
+{
+  "name": "queue-processor",
+  "version": "1.0.0",
+  "description": "A promise like processor that tries to keep the event-loop as clean as possible",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "promise",
+    "queue",
+    "processor"
+  ],
+  "author": "DaanV2",
+  "license": "ISC"
+}
