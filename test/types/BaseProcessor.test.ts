@@ -1,10 +1,10 @@
 import { BaseProcessor } from '../../src/types/BaseProcessor';
 
 class ExposedBaseProcessor<T> extends BaseProcessor<T> {
-  protected nextItem(): void { }
+  protected ProcessNextItem(): void { }
 
   constructor(items: T[]) {
-    super(items);
+    super(items, (item : T)=>{});
   }
 
   exposedResolve() {
