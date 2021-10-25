@@ -94,7 +94,6 @@ export abstract class BaseProcessor<T> implements Promise<T[]> {
     let t: Promise<void> | void | undefined;
     const item = this._items[index];
 
-
     try {
       t = this._callbackfn(item, index, this._items);
     }
