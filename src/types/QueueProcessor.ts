@@ -1,7 +1,5 @@
-import { timeStamp } from 'console';
-import { setTimeout } from 'timers/promises';
-import { runInThisContext } from 'vm';
 import { ItemError, QueueError } from './errors';
+import { ProcessFlowCollection } from './ProcessFlow';
 
 
 /**
@@ -41,7 +39,7 @@ export class QueueProcessor<T> implements Promise<T[]> {
   }
 
   private Process() {
-    setTimeout(0, this.nextItem());
+    return setTimeout(() => this.nextItem(), this._delay)
   }
 
   private nextItem(): void {
@@ -88,7 +86,7 @@ export class QueueProcessor<T> implements Promise<T[]> {
 
   //#region  Promise implementation
 
-  then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T[]) => TResult1 | PromiseLike<TResult1>) | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null): Promise<TResult1[] | TResult2> {
+  then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T[]) => TResult1 | PromiseLike<TResult1>) | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null): Promise<TResult1 | TResult2> {
     return this._general_promises.new().then<TResult1, TResult2>(onfulfilled, onrejected);
   }
 
@@ -103,76 +101,4 @@ export class QueueProcessor<T> implements Promise<T[]> {
   [Symbol.toStringTag]: string;
 
   //#endregion
-}
-
-
-
-interface ProcessFlow<T> {
-  resolve(item: T): void;
-  reject(reason: any): void;
-}
-
-
-class ProcessFlowCollection<T> implements ProcessFlow<T> {
-  private _promises: ProcessFlow<T>[];
-
-  constructor() {
-    this._promises = [];
-  }
-
-  push(item: ProcessFlow<T>): number {
-    return this._promises.push(item);
-  }
-
-  new(): PromiseWarpper<T> {
-    const p = new PromiseWarpper<T>();
-    this._promises.push(p);
-
-    return p;
-  }
-
-  resolve(item: T): void {
-    this._promises.forEach(p => p.resolve(item));
-  }
-
-  reject(reason: any) {
-    this._promises.forEach(p => p.reject(reason));
-  }
-}
-
-
-class PromiseWarpper<T> implements ProcessFlow<T>, Promise<T> {
-  private _promise: Promise<T>;
-  private _resolve?: (value: T | PromiseLike<T>) => void;
-  private _reject?: (reason?: any) => void;
-
-  constructor() {
-    this._promise = new Promise<T>((resolve, reject) => {
-      this._resolve = resolve;
-      this._reject = reject;
-    })
-  }
-
-
-  resolve(item: T): void {
-    if (this._resolve) this._resolve(item);
-  }
-
-  reject(reason?: any): void {
-    if (this._reject) this._reject(reason);
-  }
-
-  then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null): Promise<TResult1 | TResult2> {
-    return this._promise.then<TResult1, TResult2>(onfulfilled, onrejected);
-  }
-
-  catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null): Promise<T | TResult> {
-    return this._promise.catch<TResult>(onrejected);
-  }
-
-  finally(onfinally?: (() => void) | null): Promise<T> {
-    return this._promise.finally(onfinally);
-  }
-
-  [Symbol.toStringTag]: string;
 }

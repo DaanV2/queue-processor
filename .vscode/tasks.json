@@ -6,7 +6,7 @@
       "script": "build",
       "isBackground": false,
       "group": "build",
-      "label": "npm build 'bc-minecraft-bedrock-types'",
+      "label": "npm build 'queue-processor'",
       "presentation": { "reveal": "always", "panel": "dedicated" },
       "problemMatcher": ["$tsc"]
     },
@@ -15,7 +15,7 @@
       "script": "test",
       "isBackground": false,
       "group": "build",
-      "label": "npm test 'bc-minecraft-bedrock-types'",
+      "label": "npm test 'queue-processor'",
       "problemMatcher": ["$tsc"]
     }
   ]
