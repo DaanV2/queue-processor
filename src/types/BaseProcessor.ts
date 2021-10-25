@@ -3,7 +3,7 @@ import { ProcessFlowCollection } from './ProcessFlowCollection';
 
 export abstract class BaseProcessor<T> implements Promise<T[]> {
   /** The function to call for each item */
-  protected _callbackfn: (item: T, startindex: number, collection: T[]) => void;
+  protected _callbackfn: (item: T, startindex: number, collection: T[]) => Promise<void> | void;
 
   /**Promises to be rejected / resolved when this processing is done*/
   protected _general_promises: ProcessFlowCollection<T[]>;
@@ -22,7 +22,7 @@ export abstract class BaseProcessor<T> implements Promise<T[]> {
    * @param callbackfn The callback fn to process each item in
    * @param startindex The startindex
    * @param delay The delay between each call*/
-  constructor(items: T[], callbackfn: (items: T, startindex: number, collection: T[]) => void, startindex: number = 0, delay: number = 0) {
+  constructor(items: T[], callbackfn: (items: T, startindex: number, collection: T[]) => Promise<void> | void, startindex: number = 0, delay: number = 0) {
     this._callbackfn = callbackfn;
     this._general_promises = new ProcessFlowCollection<T[]>();
     this._errors = [];
@@ -33,11 +33,13 @@ export abstract class BaseProcessor<T> implements Promise<T[]> {
 
   /**Resolves all promises and provides them with context information*/
   protected resolve() {
+    console.debug('resolve');
     return this._general_promises.resolve(this._items);
   }
 
   /**Resolves all promises and provides them with context information*/
   protected reject() {
+    console.debug('reject');
     return this._general_promises.reject(this._items);
   }
 
@@ -62,6 +64,7 @@ export abstract class BaseProcessor<T> implements Promise<T[]> {
 
   /**Wraps up the processing of this processor and fires off the nesscary queued promises*/
   protected finish(): void {
+    console.debug('finishing');
     //We got errors so reject
     if (this._errors.length > 0) {
       const err = QueueError.create(`While processing, received ${this._errors.length}x errors`, this._errors);
@@ -81,6 +84,30 @@ export abstract class BaseProcessor<T> implements Promise<T[]> {
 
     //Else process next item
     setTimeout(() => { this.ProcessNextItem() }, this._delay);
+  }
+
+  /**
+   * 
+   * @returns 
+   */
+  protected ProcessCurrentItem(index: number): Promise<void> {
+    let t: Promise<void> | void | undefined;
+    const item = this._items[index];
+
+
+    try {
+      t = this._callbackfn(item, index, this._items);
+    }
+    catch (err) {
+      this.errorItem(item, err, index);
+    }
+
+    if (typeof t === 'object') {
+      t.catch(err => this.errorItem(item, err, index));
+      return t;
+    }
+
+    return Promise.resolve();
   }
 
   /**Process the next item in queue, assumed is this function either call this.Process or this.finish*/

@@ -9,7 +9,7 @@ export class QueueBatchProcessor<T> extends BaseProcessor<T> {
    * @param items The items to loop over
    * @param callbackfn The function to call per item
    * @param delay The delay between items*/
-  constructor(items: T[], callbackfn: (items: T, startindex: number, collection: T[]) => void, batchsize: number = -1, startindex: number = 0, delay: number = 0) {
+  constructor(items: T[], callbackfn: (items: T, startindex: number, collection: T[]) => Promise<void> | void, batchsize: number = -1, startindex: number = 0, delay: number = 0) {
     super(items, callbackfn, startindex, delay);
 
     //Check batch size, if invalid, then take either 1 or the square root of the amount of items to process
@@ -22,33 +22,20 @@ export class QueueBatchProcessor<T> extends BaseProcessor<T> {
   }
 
   protected override ProcessNextItem(): void {
-    const index = this._index;
-
     //get item to process
-    const item = this._items[index];
+    const index = this._index;
 
     let I;
     const max = index + this._batchsize;
+    const promises: Promise<void>[] = [];
+
     //Keep this._items.length if case someone messed with the item set
     for (I = index; I < Math.min(this._items.length, max); I++) {
-      try {
-        const item = this._items[I];
-        //Preform call
-        this._callbackfn(item, index, this._items);
-      }
-      catch (err: any) {
-        this.errorItem(item, err, index);
-      }
-    }
-
-    //Assuming and enforcing that we atleast processing one item per tick
-    if (this._index >= I) {
+      const p = this.ProcessCurrentItem(I);
+      promises.push(p);
       this._index++;
     }
-    else {
-      this._index = I;
-    }
 
-    this.Process();
+    Promise.all(promises).finally(() => this.Process());
   }
 }

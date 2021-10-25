@@ -7,7 +7,7 @@ export class QueueProcessor<T> extends BaseProcessor<T> {
    * @param callbackfn The function to call per item
    * @param startindex The index to start at
    * @param delay The delay between calls*/
-  constructor(items: T[], callbackfn: (item: T, index: number, items: T[]) => void, startindex: number = 0, delay: number = 0) {
+  constructor(items: T[], callbackfn: (item: T, index: number, items: T[]) => Promise<void> | void, startindex: number = 0, delay: number = 0) {
     super(items, callbackfn, startindex, delay);
     this._callbackfn = callbackfn;
 
@@ -15,20 +15,14 @@ export class QueueProcessor<T> extends BaseProcessor<T> {
   }
 
   protected override ProcessNextItem(): void {
-    const index = this._index;
-    this._index++;
-
     //get item to process
-    const item = this._items[index];
+    const p = this.ProcessCurrentItem(this._index);
 
-    try {
-      //Preform call
-      this._callbackfn(item, index, this._items);
-    }
-    catch (err: any) {
-      this.errorItem(item, err, index);
-    }
-
-    this.Process();
+    //If promise is done then trigger next
+    p.finally(() => {
+      //Move next
+      this._index++;
+      this.Process()
+    });
   }
 }
