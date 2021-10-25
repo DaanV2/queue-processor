@@ -2,25 +2,28 @@ import { ItemError, QueueError } from './Errors';
 import { ProcessFlowCollection } from './ProcessFlow';
 
 export abstract class BaseProcessor<T> implements Promise<T[]> {
-  /** */
+  /** The function to call for each item */
+  protected _callbackfn: (item: T, startindex: number, collection: T[]) => void;
+
+  /**Promises to be rejected / resolved when this processing is done*/
   protected _general_promises: ProcessFlowCollection<T[]>;
-  /** */
+  /**Collected errors*/
   protected _errors: any[];
-  /** The items to process */
+  /**The items to process*/
   protected _items: T[];
 
-  /** The index of the current item being processed*/
+  /**The index of the current item being processed*/
   protected _index: number;
-  /** The delay of the each iteration*/
+  /**The delay of the each iteration*/
   protected _delay: number;
 
-  /**
-   * 
-   * @param items 
-   * @param startindex 
-   * @param delay 
-   */
-  constructor(items: T[], startindex: number = 0, delay: number = 0) {
+  /**Initialize a new BaseProcessor<T>
+   * @param items The item to process
+   * @param callbackfn The callback fn to process each item in
+   * @param startindex The startindex
+   * @param delay The delay between each call*/
+  constructor(items: T[], callbackfn: (items: T, startindex: number, collection: T[]) => void, startindex: number = 0, delay: number = 0) {
+    this._callbackfn = callbackfn;
     this._general_promises = new ProcessFlowCollection<T[]>();
     this._errors = [];
     this._items = items;
@@ -28,23 +31,21 @@ export abstract class BaseProcessor<T> implements Promise<T[]> {
     this._delay = delay;
   }
 
-  /** */
+  /**Resolves all promises and provides them with context information*/
   protected resolve() {
     return this._general_promises.resolve(this._items);
   }
 
-  /** */
+  /**Resolves all promises and provides them with context information*/
   protected reject() {
     return this._general_promises.reject(this._items);
   }
 
-  /**
-   * 
-   * @param item 
-   * @param err 
-   * @param index 
-   * @returns 
-   */
+  /**Creates a new error item in this instance
+   * @param item The item that caused the error
+   * @param err The err object
+   * @param index The index of the item
+   * @returns A ItemError<T>*/
   protected errorItem(item: T, err: any | undefined, index: number): ItemError<T> {
     if (typeof err === undefined || typeof err.message !== "string") {
       err = ItemError.create("unknown error", item, index);
@@ -59,7 +60,7 @@ export abstract class BaseProcessor<T> implements Promise<T[]> {
     return err;
   }
 
-  /** */
+  /**Wraps up the processing of this processor and fires off the nesscary queued promises*/
   protected finish(): void {
     //We got errors so reject
     if (this._errors.length > 0) {
@@ -72,21 +73,20 @@ export abstract class BaseProcessor<T> implements Promise<T[]> {
     return this._general_promises.resolve(this._items);
   }
 
-  /**
-   * 
-   * @returns 
-   */
-  protected Process() {
-    return setTimeout(() => this.nextItem(), this._delay)
+  /**Throws the next item on the event loop, or if this processor is at the end, will resolves all promises
+   * @returns */
+  protected Process() : void {
+    //If we are at the end, finish up the que
+    if (this._index >= this._items.length) return this.finish();
+
+    //Else process next item
+    setTimeout(() => { this.ProcessNextItem() }, this._delay);
   }
 
-  /**
-   * 
-   */
-   protected abstract nextItem(): void;
+  /**Process the next item in queue, assumed is this function either call this.Process or this.finish*/
+  protected abstract ProcessNextItem(): void;
 
-  /**
-   * 
+  /**Attaches callbacks for the resolution and/or rejection of the Promise
    * @param onfulfilled 
    * @param onrejected 
    * @returns 
@@ -95,8 +95,7 @@ export abstract class BaseProcessor<T> implements Promise<T[]> {
     return this._general_promises.new().then<TResult1, TResult2>(onfulfilled, onrejected);
   }
 
-  /**
-   * 
+  /**Attaches a callback for only the rejection of the Promise.
    * @param onrejected 
    * @returns 
    */
@@ -104,8 +103,7 @@ export abstract class BaseProcessor<T> implements Promise<T[]> {
     return this._general_promises.new().catch<TResult>(onrejected);
   }
 
-  /**
-   * 
+  /**Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The resolved value cannot be modified from the callback.
    * @param onfinally 
    * @returns 
    */

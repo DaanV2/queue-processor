@@ -1,36 +1,22 @@
 import { BaseProcessor } from './BaseProcessor';
 
-
-/**
- * 
- */
+/**A processor that handles the given items seperalty as a single event on the evenloop.*/
 export class QueueProcessor<T> extends BaseProcessor<T> {
-  /** The function to call for each item */
-  private _callbackfn: (item: T, index: number, items: T[]) => void;
-
   /**Creates a new instance of QueueProcessor<T>
    * @param items The items to loop over
    * @param callbackfn The function to call per item
-   * @param startindex  
-   * @param delay  
-   */
+   * @param startindex The index to start at
+   * @param delay The delay between calls*/
   constructor(items: T[], callbackfn: (item: T, index: number, items: T[]) => void, startindex: number = 0, delay: number = 0) {
-    super(items, startindex, delay);
+    super(items, callbackfn, startindex, delay);
     this._callbackfn = callbackfn;
 
     this.Process();
   }
 
-  /**
-   * 
-   * @returns 
-   */
-  protected override nextItem(): void {
+  protected override ProcessNextItem(): void {
     const index = this._index;
     this._index++;
-
-    //If we are at the end, then finish off the queue
-    if (index >= this._items.length) return this.finish();
 
     //get item to process
     const item = this._items[index];
