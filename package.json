@@ -1,5 +1,5 @@
 {
-  "name": "queue-processor",
+  "name": "@daanv2/queue-processor",
   "version": "0.0.1",
   "description": "A promise like processor that tries to keep the event-loop as clean as possible",
   "main": "./lib/src/main.js",
