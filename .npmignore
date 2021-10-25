@@ -1,8 +1,9 @@
-src
+src/**
 tsconfig.json
 tslint.json
 .prettierrc
 test/
 lib/test
+!lib/src
 **/*.test.js
 *.test.js
