@@ -54,7 +54,7 @@ describe("queue-process", () => {
 
     processor.then(() => console.log("done called"));
     processor.catch(err => {
-      if(err) caughtError = true;
+      if (err) caughtError = true;
     });
     processor.finally(() => {
       expect(receiver.length).to.greaterThan(100);
@@ -66,4 +66,47 @@ describe("queue-process", () => {
       done();
     });
   });
+
+  it("advanced", (done) => {
+    const items = [
+      "example1",
+      "example2",
+      "example3",
+      "example4",
+      "example5"
+    ]
+
+    let catchCalled = false;
+    let thenCalled = false;
+
+    const processor = new QueueProcessor(items, (item) => {
+      return new Promise((resolve, reject) => {
+        if (item === "example3") {
+          reject(new Error("hello!"));
+        }
+
+        resolve();
+      });
+    });
+
+    processor.then((items) => {
+      thenCalled = true;
+    });
+
+    processor.catch(err => {
+      if (err) catchCalled = true;
+    });
+
+    processor.finally(() => {
+      try {
+        expect(thenCalled, "expected then to be called").to.be.false;
+        expect(catchCalled, "expected catch to be called").to.be.true;
+        done();
+      }
+      catch (err) {
+        done(err);
+      }
+    });
+
+  })
 });
