@@ -26,9 +26,6 @@ A promise like processor that tries to keep the event-loop as clean as possible
 
   //OR
 
-  //The callback function for each item
-  const process_item : (item : T[]) => { ... }
-
   //Makes a new queue batch processor
   const processor = new QueueBatchProcessor<T>(items, process_item);
 
