@@ -33,13 +33,13 @@ export abstract class BaseProcessor<T> implements Promise<T[]> {
 
   /**Resolves all promises and provides them with context information*/
   protected resolve() {
-    console.debug('resolve');
+    //console.debug('resolve');
     return this._general_promises.resolve(this._items);
   }
 
   /**Resolves all promises and provides them with context information*/
   protected reject() {
-    console.debug('reject');
+    //console.debug('reject');
     return this._general_promises.reject(this._items);
   }
 
@@ -64,7 +64,7 @@ export abstract class BaseProcessor<T> implements Promise<T[]> {
 
   /**Wraps up the processing of this processor and fires off the nesscary queued promises*/
   protected finish(): void {
-    console.debug('finishing');
+    //console.debug('finishing');
     //We got errors so reject
     if (this._errors.length > 0) {
       const err = QueueError.create(`While processing, received ${this._errors.length}x errors`, this._errors);
