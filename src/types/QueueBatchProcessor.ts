@@ -41,7 +41,8 @@ export class QueueBatchProcessor<T> extends BaseProcessor<T> {
       }
     }
 
-    if (this._index <= I) {
+    //Assuming and enforcing that we atleast processing one item per tick
+    if (this._index >= I) {
       this._index++;
     }
     else {
