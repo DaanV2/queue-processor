@@ -1,5 +1,5 @@
 import { ItemError, QueueError } from './Errors';
-import { ProcessFlowCollection } from './ProcessFlow';
+import { ProcessFlowCollection } from './ProcessFlowCollection';
 
 export abstract class BaseProcessor<T> implements Promise<T[]> {
   /** The function to call for each item */
@@ -75,7 +75,7 @@ export abstract class BaseProcessor<T> implements Promise<T[]> {
 
   /**Throws the next item on the event loop, or if this processor is at the end, will resolves all promises
    * @returns */
-  protected Process() : void {
+  protected Process(): void {
     //If we are at the end, finish up the que
     if (this._index >= this._items.length) return this.finish();
 

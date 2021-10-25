@@ -30,7 +30,7 @@ export class QueueBatchProcessor<T> extends BaseProcessor<T> {
     let I;
     const max = index + this._batchsize;
     //Keep this._items.length if case someone messed with the item set
-    for (I = index; I > Math.min(this._items.length, max); I++) {
+    for (I = index; I < Math.min(this._items.length, max); I++) {
       try {
         const item = this._items[I];
         //Preform call
