@@ -31,7 +31,7 @@ export class QueueBatchProcessor<T> extends BaseProcessor<T> {
 
     //Keep this._items.length if case someone messed with the item set
     for (I = index; I < Math.min(this._items.length, max); I++) {
-      const p = this.ProcessCurrentItem(I);
+      const p = this.ProcessItem(I);
       promises.push(p);
       this._index++;
     }

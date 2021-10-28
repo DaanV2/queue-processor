@@ -90,7 +90,7 @@ export abstract class BaseProcessor<T> implements Promise<T[]> {
    * 
    * @returns 
    */
-  protected ProcessCurrentItem(index: number): Promise<void> {
+  protected ProcessItem(index: number): Promise<void> {
     let t: Promise<void> | void | undefined;
     const item = this._items[index];
 

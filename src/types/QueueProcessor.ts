@@ -16,13 +16,13 @@ export class QueueProcessor<T> extends BaseProcessor<T> {
 
   protected override ProcessNextItem(): void {
     //get item to process
-    const p = this.ProcessCurrentItem(this._index);
+    const p = this.ProcessItem(this._index);
 
     //If promise is done then trigger next
     p.finally(() => {
       //Move next
       this._index++;
-      this.Process()
+      this.Process();
     });
   }
 }
