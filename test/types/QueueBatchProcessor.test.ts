@@ -86,15 +86,15 @@ describe("queue-batch-process", () => {
     setTimeout(() => { process(-1, 0); process(-5, 0) }, 0);
 
     processor.then(() => {
-      console.debug("then called");
+      //console.debug("then called");
       thenCalled = true
     });
     processor.catch(err => {
       if (err) errorCalled = true;
-      console.debug("catch called");
+      //console.debug("catch called");
     });
     processor.finally(() => {
-      console.debug("finally called");
+      //console.debug("finally called");
       try {
         const testitem = (item: number) => {
           const index = receiver.lastIndexOf(item);
