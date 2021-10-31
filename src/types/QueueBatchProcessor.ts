@@ -18,7 +18,7 @@ export class QueueBatchProcessor<T> extends BaseProcessor<T> {
     //console.debug(batchsize);
     this._batchsize = batchsize;
 
-    this.Process();
+    setTimeout(() => this.Process());
   }
 
   protected override ProcessNextItem(): void {

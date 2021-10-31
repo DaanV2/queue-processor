@@ -11,7 +11,7 @@ export class QueueProcessor<T> extends BaseProcessor<T> {
     super(items, callbackfn, startindex, delay);
     this._callbackfn = callbackfn;
 
-    this.Process();
+    setTimeout(() => this.Process());
   }
 
   protected override ProcessNextItem(): void {
