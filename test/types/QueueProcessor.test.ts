@@ -108,5 +108,13 @@ describe("queue-process", () => {
       }
     });
 
-  })
+  });
+
+  it("0 items call check", (done) => {
+    const items: number[] = [];
+
+    const processor = new QueueProcessor(items, (item) => { item += 1; });
+
+    processor.finally(() => done());
+  });
 });

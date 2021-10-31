@@ -13,7 +13,7 @@ export class QueueBatchProcessor<T> extends BaseProcessor<T> {
     super(items, callbackfn, startindex, delay);
 
     //Check batch size, if invalid, then take either 1 or the square root of the amount of items to process
-    if (batchsize < 0) batchsize = Math.max(Math.trunc(Math.sqrt(items.length)), 1);
+    if (batchsize < 0) batchsize = Math.max(Math.trunc(Math.sqrt(items.length > 1 ? items.length : 1)), 1);
 
     //console.debug(batchsize);
     this._batchsize = batchsize;
