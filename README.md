@@ -1,6 +1,6 @@
 # Queue-Processor
 
-A promise like processor that tries to keep the event-loop as clean as possible
+A promise like processor that tries to keep the event-loop as clean as possible. It cuts up the processing of events into smaller chunks and processes them in after each other. but allowing other events to go first.
 
 [![npm-publish](https://github.com/DaanV2/queue-processor/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/DaanV2/queue-processor/actions/workflows/npm-publish.yml)
 [![npm-test](https://github.com/DaanV2/queue-processor/actions/workflows/npm-test.yml/badge.svg)](https://github.com/DaanV2/queue-processor/actions/workflows/npm-test.yml)
@@ -11,30 +11,21 @@ A promise like processor that tries to keep the event-loop as clean as possible
 ```ts
   //The array of items to process
   const items : T[] = getItems();
-  //The callback function for each item
-  const process_item : (item : T) => { ... }
 
-  //Makes a new queue processor
-  const processor = new QueueProcessor<T>(items, process_item);
+  //Processes for each
+  QueueProcessor.forEach(items, (item)=>console.log(item));
 
-  //A promise implementation around the processor
-  processor.then((items)=>{ ... });
+  //Map each item
+  const mapped : U[] = QueueProcessor.map(items, (item)=>convert(item));
 
-  //The possible error returned is of type QueueError
-  processor.catch((err)=> { ... );
-  processor.finaly(()=>{ ... });
+  //Filter each item
+  const filtered : T[] = QueueProcessor.filter(items, (item)=>item === ...);
 
-  //OR
+  //Processes for each, then use the promise to wait for the result
+  QueueProcessor.forEach(items, (item)=>console.log(item)).then(items=>{...});
 
-  //Makes a new queue batch processor
-  const processor = new QueueBatchProcessor<T>(items, process_item);
-
-  //A promise implementation around the processor
-  processor.then((items)=>{ ... });
-
-  //The possible error returned is of type QueueError
-  processor.catch((err)=> { ... );
-  processor.finaly(()=>{ ... });
+  //Async await code
+  const items = await QueueProcessor.forEach(items, (item)=>console.log(item));
 ```
 
 ## How to works
