@@ -1,4 +1,4 @@
-import { ProcessFlow } from './ProcessFlow';
+import { ProcessFlow } from "./ProcessFlow";
 
 /**A class that wraps around promise but provides easy access to resolve / reject it*/
 export class PromiseWrapper<T> implements ProcessFlow<T>, Promise<T> {
@@ -13,7 +13,7 @@ export class PromiseWrapper<T> implements ProcessFlow<T>, Promise<T> {
     this._promise = new Promise<T>((resolve, reject) => {
       this._resolve = resolve;
       this._reject = reject;
-    })
+    });
   }
 
   /**resolves the promise */
@@ -27,7 +27,10 @@ export class PromiseWrapper<T> implements ProcessFlow<T>, Promise<T> {
   }
 
   /**Provides a then on the internal promise */
-  then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null): Promise<TResult1 | TResult2> {
+  then<TResult1 = T, TResult2 = never>(
+    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null,
+    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null
+  ): Promise<TResult1 | TResult2> {
     return this._promise.then<TResult1, TResult2>(onfulfilled, onrejected);
   }
 

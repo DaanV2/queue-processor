@@ -15,7 +15,7 @@ export namespace ItemError {
     if (typeof value === "object") {
       if (typeof value.message !== "string") return false;
       if (typeof value.item === "undefined") return false;
-      if (typeof value.index !== 'number') return false;
+      if (typeof value.index !== "number") return false;
 
       return true;
     }
@@ -25,7 +25,7 @@ export namespace ItemError {
 
   /**Creates a new item error around the given error message, item and index*/
   export function create<T>(message: string, item: T, index: number): ItemError<T> {
-    const out = <ItemError<T>>(new Error(message));
+    const out = <ItemError<T>>new Error(message);
     out.index = index;
     out.item = item;
     out.name = "ItemError";
@@ -42,8 +42,8 @@ export interface QueueError extends Error {
 /**The namespace that provides functions for QueueError*/
 export namespace QueueError {
   /**Checks if the given value implements the given QueueError
- * @param value The value to check
- * @returns true / false   */
+   * @param value The value to check
+   * @returns true / false   */
   export function is(value: any): value is QueueError {
     if (typeof value === "object") {
       if (typeof value.message !== "string") return false;
@@ -57,7 +57,7 @@ export namespace QueueError {
 
   /**Creates a new queue error*/
   export function create(message: string, errors: any[]): QueueError {
-    const out = <QueueError>(new Error(message));
+    const out = <QueueError>new Error(message);
 
     out.name = "QueueError";
     out.errors = errors;
