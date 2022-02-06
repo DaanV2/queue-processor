@@ -1,6 +1,6 @@
 {
   "name": "@daanv2/queue-processor",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "description": "A promise like processor that tries to keep the event-loop as clean as possible. It cuts up the processing of events into smaller chunks and processes them in after each other. but allowing other events to go first.",
   "main": "./lib/src/main.js",
   "types": "./lib/src/main.d.ts",
