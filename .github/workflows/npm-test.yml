@@ -24,5 +24,8 @@ jobs:
           cache-dependency-path: package-lock.json
           node-version-file: .nvmrc
 
+      - name: 🔨 Setup project
+        run: npm ci
+
       - name: 📋 Test project
         run: npm run test
