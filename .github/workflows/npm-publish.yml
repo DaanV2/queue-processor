@@ -5,35 +5,37 @@ name: npm-publish
 
 on:
   workflow_dispatch:
-  
+
   release:
     types: [published]
+
   workflow_run:
     workflows: ["tagged-release"]
     types:
-    - completed
+      - completed
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14
-      - run: npm ci
-      - run: npm test
-
   publish-npm:
-    needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v3
         with:
-          node-version: 14
+          cache: npm
+          cache-dependency-path: package-lock.json
+          node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm publish
+
+      - name: 🔨 Setup project
+        run: npm ci
+
+      - name: 📋 Test project
+        run: npm run test
+
+      - name: 🚚 Publish to npm
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
