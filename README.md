@@ -31,7 +31,7 @@ A promise like processor that tries to keep the event-loop as clean as possible.
 ## How to works
 
 The processor is meant to keep the event loop as free as possible while processing a large collection of items. It also keeps the time between each
-item processed in the event loop as small as possible. Each item is processed seperatly on the event loop as a seperate items. But each item is added
+item processed in the event loop as small as possible. Each item is processed separately on the event loop as a separate item. But each item is added
 to the loop after the previous item has been processed.
 
 This allows other items that have been added to the queue to be processed much earlier. This will slow down your overall processing of all the items,
