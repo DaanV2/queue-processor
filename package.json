@@ -23,7 +23,7 @@
     "processor"
   ],
   "author": "DaanV2",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/DaanV2/queue-processor/issues"
   },
