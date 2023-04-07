@@ -1,10 +1,19 @@
 # Queue-Processor
 
-A promise like processor that tries to keep the event-loop as clean as possible. It cuts up the processing of events into smaller chunks and processes them in after each other. but allowing other events to go first.
+A processor of collections that cuts up promisings time into chunks to allow other tasks/processes to also get some CPU. A promise like processor that tries to keep the event-loop as clean as possible. It cuts up the processing of events into smaller chunks and processes them in after each other. but allowing other events to go first.
 
 [![npm-publish](https://github.com/DaanV2/queue-processor/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/DaanV2/queue-processor/actions/workflows/npm-publish.yml)
 [![npm-test](https://github.com/DaanV2/queue-processor/actions/workflows/npm-test.yml/badge.svg)](https://github.com/DaanV2/queue-processor/actions/workflows/npm-test.yml)
 [![tagged-release](https://github.com/DaanV2/queue-processor/actions/workflows/tagged-release.yml/badge.svg)](https://github.com/DaanV2/queue-processor/actions/workflows/tagged-release.yml)
+
+## Why would you need this?
+
+I have an extension that takes a ~30 to process couple of hunderd of files, summarize them and diagnose problems, this all takes CPU time to do. While at the same time I want to give priority to smaller and faster takes in which I needed a library that could ensure that things got chunked into smaller pieces of work. So other smaller tasks could be done inbetween the large parts.
+
+Pros:
+- Faster respond times on other tasks/processes as they get their time to shine as well.
+Cons
+- Slightly slower. Chunk a process and allowing other tasks to go first does how long it takes before something is finished.
 
 ## Example
 
