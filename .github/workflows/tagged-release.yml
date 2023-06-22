@@ -1,4 +1,4 @@
-name: "tagged-release"
+name: 📑 Release Page
 
 on:
   push:
@@ -7,12 +7,16 @@ on:
 
 jobs:
   tagged-release:
-    name: "Tagged Release"
+    name: 📑 Release Page
     runs-on: "ubuntu-latest"
 
     steps:
-      - name: Create page
-        uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 📑 Release Page
+        uses: ncipollo/release-action@v1
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          generateReleaseNotes: true
+          makeLatest: true
