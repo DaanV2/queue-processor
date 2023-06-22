@@ -1,6 +1,6 @@
 {
   "name": "@daanv2/queue-processor",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "A processor of collections that chunks the items into subsections. Each chunk is scheduled after when the previous chunk or item has been processed. This allows other workflows or scheduled work to execute before continuing on a large dataset. These processors try to keep the event loop as clean as possible.",
   "main": "./lib/src/main.js",
   "types": "./lib/src/main.d.ts",
