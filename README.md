@@ -1,6 +1,6 @@
 # Queue-Processor
 
-A processor of collections that cuts up promisings time into chunks to allow other tasks/processes to also get some CPU. A promise like processor that tries to keep the event-loop as clean as possible. It cuts up the processing of events into smaller chunks and processes them in after each other. but allowing other events to go first.
+A processor of collections that chunks the items into subsections. Each chunk is scheduled after when the previous chunk or item has been processed. This allows other workflows or scheduled work to execute before continuing on a large dataset. These processors try to keep the event loop as clean as possible. 
 
 [![npm-publish](https://github.com/DaanV2/queue-processor/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/DaanV2/queue-processor/actions/workflows/npm-publish.yml)
 [![npm-test](https://github.com/DaanV2/queue-processor/actions/workflows/npm-test.yml/badge.svg)](https://github.com/DaanV2/queue-processor/actions/workflows/npm-test.yml)
@@ -8,12 +8,12 @@ A processor of collections that cuts up promisings time into chunks to allow oth
 
 ## Why would you need this?
 
-I have an extension that takes a ~30 to process couple of hunderd of files, summarize them and diagnose problems, this all takes CPU time to do. While at the same time I want to give priority to smaller and faster takes in which I needed a library that could ensure that things got chunked into smaller pieces of work. So other smaller tasks could be done inbetween the large parts.
+I have an extension that takes a ~30 to process a couple of hundred files, summarize them and diagnose problems; this all takes CPU time. While at the same time, I wanted to give priority to smaller and faster takes, in which I needed a library that could ensure that things got chunked into smaller pieces of work. So other smaller tasks could be done in between the large parts.
 
 Pros:
-- Faster respond times on other tasks/processes as they get their time to shine as well.
-Cons
-- Slightly slower. Chunk a process and allowing other tasks to go first does how long it takes before something is finished.
+- Faster response times on other tasks/processes as they also get their time to shine.
+Cons:
+- Slightly slower. Chunking a process and allowing other tasks to go first determines how long it takes to finish something.
 
 ## Example
 
@@ -41,9 +41,9 @@ Cons
 
 The processor is meant to keep the event loop as free as possible while processing a large collection of items. It also keeps the time between each
 item processed in the event loop as small as possible. Each item is processed separately on the event loop as a separate item. But each item is added
-to the loop after the previous item has been processed.
+to the loop after processing the previous item.
 
-This allows other items that have been added to the queue to be processed much earlier. This will slow down your overall processing of all the items,
+This allows other items added to the queue to be processed much earlier. This will slow down your overall processing of all the items,
 but the benefit is that other calls can be handled as well.
 
 There is also a batch processor that sends of a whole series of items to the callback item to be processed.
