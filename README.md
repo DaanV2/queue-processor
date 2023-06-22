@@ -36,14 +36,3 @@ Cons:
   //Async await code
   const items = await QueueProcessor.forEach(items, (item)=>console.log(item));
 ```
-
-## How to works
-
-The processor is meant to keep the event loop as free as possible while processing a large collection of items. It also keeps the time between each
-item processed in the event loop as small as possible. Each item is processed separately on the event loop as a separate item. But each item is added
-to the loop after processing the previous item.
-
-This allows other items added to the queue to be processed much earlier. This will slow down your overall processing of all the items,
-but the benefit is that other calls can be handled as well.
-
-There is also a batch processor that sends of a whole series of items to the callback item to be processed.
