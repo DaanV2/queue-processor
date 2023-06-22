@@ -1,7 +1,7 @@
 {
   "name": "@daanv2/queue-processor",
   "version": "2.2.1",
-  "description": "A promise like processor that tries to keep the event-loop as clean as possible. It cuts up the processing of events into smaller chunks and processes them in after each other. but allowing other events to go first.",
+  "description": "A processor of collections that chunks the items into subsections. Each chunk is scheduled after when the previous chunk or item has been processed. This allows other workflows or scheduled work to execute before continuing on a large dataset. These processors try to keep the event loop as clean as possible.",
   "main": "./lib/src/main.js",
   "types": "./lib/src/main.d.ts",
   "scripts": {
